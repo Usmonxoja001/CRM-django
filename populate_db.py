@@ -1,74 +1,37 @@
+import os
+import django
 import random
-from contacts.models import Contact
-from leads.models import Lead
-from deals.models import Deal
-from tasks.models import Task
-from django.contrib.auth.models import User
 from django.utils import timezone
 
-user = User.objects.first()
+# 1. Django sozlamalarini ulash
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crm_project.settings")
+django.setup()
+
+# 2. Model va foydalanuvchilarni import qilish
+from contacts.models import Contact
+from leads.models import Lead, Deal, Task
+from django.contrib.auth.models import User
+
+# 3. Superuserni olish
+user = User.objects.filter(is_superuser=True).first()
 if not user:
-    raise Exception("Avval User yarating! (python manage.py createsuperuser)")
+    raise Exception("Superuser topilmadi. Avval createsuperuser qiling!")
 
-# Yordamchi ma'lumotlar
-first_names = [
-    "Azizbek", "Dilnoza", "Shaxzod", "Madina", "Sardor", "Gulnoza", "Islom", "Zarina", "Jasur", "Nodira",
-    "Otabek", "Malika", "Botir", "Shoira", "Sherzod", "Rano", "Bekzod", "Lola", "Iroda", "Ulug‘bek",
-    "Farrux", "Nilufar", "Temur", "Dilorom", "Komil", "Sabina", "Akmal", "Rayhon", "Samandar", "Gulbahor"
-]
-last_names = [
-    "Rahimov", "Ismoilova", "Yuldashev", "Toirova", "Qurbonov", "Karimova", "Usmonov", "Abdullayeva", "Xudoyberdiyev", "Turg‘unova",
-    "Qodirov", "Normatova", "Iskandarov", "Solieva", "Bekchanov", "Pulatova", "G‘ofurov", "Odilova", "Sharipov", "Olimova",
-    "Valiyev", "Juraeva", "Davlatov", "Sobirova", "Sodiqov", "Mirzayeva", "Nazarov", "Qo‘chqarova", "Jabborov", "Tojiboyeva"
-]
-companies = [
-    "Toshkent Fashion", "SamStyle", "ModaBiz", "ElegantLine", "UstozStyle", "YangiUslub", "GrandDress", "Barchinoy Moda", "FitLife Wear", "TillaKiyim",
-    "Avangard", "Shahzoda Style", "Zarifcha", "TopTrend", "RoyalWear", "FashionCity", "ModaMarkaz", "Klassika", "UzTrend", "Zarafshan Kiyim",
-    "CityLook", "DressHub", "Asal Moda", "Raqamli Moda", "Glamour", "StyleMix", "UltraFashion", "SimSim", "HayotStyle", "BahorModa"
-]
-positions = [
-    "Do‘kon egasi", "Bozor sotuvchisi", "Marketing menejeri", "Sotuvchi", "Direktor", "Boshqaruvchi", "Savdo agenti", "Menecer", "Hududiy menejer", "Sotib oluvchi"
-]
-addresses = [
-    "Toshkent shahri, Chilonzor tumani", "Samarqand, Siab bozori", "Andijon, Asaka tumani", "Namangan, Chorsu bozori", "Nukus, Amudaryo ko‘chasi",
-    "Farg‘ona, Markaziy bozor", "Buxoro, Mustaqillik ko‘chasi", "Qarshi, Do‘stlik mahallasi", "Jizzax, Sharq ko‘chasi", "Qo‘qon, Istiqlol ko‘chasi"
-]
+# 4. Tasodifiy ma’lumotlar
+first_names = ["Ali", "Vali", "Hasan", "Husan", "Bobur"] * 6
+last_names = ["Karimov", "Toshpulatov", "Xasanov", "Norqulov", "Akramov"] * 6
+companies = ["Nuron IT", "Mega Soft", "TechnoHub", "PDP", "Inha"] * 6
+positions = ["Manager", "Developer", "Analyst", "Designer", "Intern"]
+addresses = ["Toshkent", "Samarqand", "Buxoro", "Farg‘ona", "Namangan"]
+lead_titles = [f"Lead #{i+1}" for i in range(30)]
+lead_desc = ["Yirik loyiha", "Aloqa o‘rnatildi", "Kutilmoqda", "Tavsiya asosida", "Sinov bosqichi"]
 
-lead_titles = [
-    "Yozgi kolleksiya uchun buyurtma", "Qishki palto importi", "Bolalar sport kostyumlari", "Ofis kiyimlari", "Maktab formasi buyurtmasi",
-    "Yirik ulgurji buyurtma", "Ayollar bahorgi liboslari", "Erkaklar to‘plami", "Onalar uchun yangi kolleksiya", "Yoshlar streetwear",
-    "Sochiq va uy tovarlari", "Kiyim aksessuarlari", "Brend katalogi buyurtmasi", "Sport kiyimlar", "Xalatlar va pijamalar",
-    "Asosiy yetkazib berish", "Namuna olish", "Sinov partiyasi", "Maxsus dizayn", "Chegirma aksiyasi",
-    "Yangi hamkorlik", "Ommaviy savdo", "Rasmiy tender", "Maxfiy buyurtma", "Individual buyurtma",
-    "Eksport shartnomasi", "Mahalliy distribyutor", "Yillik shartnoma", "Yozgi aksiya", "Chegirma haftaligi"
-]
-
-lead_desc = [
-    "Kiyim-kechak kolleksiyasi uchun narx va assortiment so‘radi.",
-    "Yirik buyurtmaga qiziqish bildirdi.",
-    "Yangi kolleksiyani ko‘rishni xohlaydi.",
-    "Tijorat taklifi talab qilindi.",
-    "Hamkorlik shartlari bo‘yicha savol berdi.",
-    "Narxlar va yetkazib berish haqida ma’lumot so‘radi.",
-    "Ofis uchun maxsus kiyimlar kerak.",
-    "Bolalar uchun sport to‘plami qiziqtirdi.",
-    "Yangi yetkazib beruvchi kerakligini bildirdi.",
-    "Brend katalogiga buyurtma bermoqchi."
-]
-
-# Telefon raqamidan +998 ni olib tashlaymiz
 def clean_phone(phone):
-    if phone.startswith('+998'):
-        return phone[4:]
-    elif phone.startswith('998'):
-        return phone[3:]
-    return phone
+    return phone.replace(" ", "").replace("-", "")
 
-contacts = []
-leads = []
-deals = []
-tasks = []
+contacts, leads, deals, tasks = [], [], [], []
 
+# 5. Ma’lumotlarni yaratish
 for i in range(30):
     first = first_names[i]
     last = last_names[i]
@@ -77,6 +40,7 @@ for i in range(30):
     address = random.choice(addresses)
     email = f"{first.lower()}.{last.lower()}@{company.lower().replace(' ', '')}.uz"
     phone = clean_phone(f"+998{random.randint(900000000, 999999999)}")
+
     contact = Contact.objects.create(
         first_name=first,
         last_name=last,
@@ -86,7 +50,10 @@ for i in range(30):
         position=position,
         address=address,
         source=random.choice(['website', 'referral', 'social_media', 'email', 'other']),
-        notes=random.choice(["Eng yirik mijoz", "Potensial yangi mijoz", "Hamkorlik bo‘yicha muzokara", "Doimiy buyurtmachi", ""]),
+        notes=random.choice([
+            "Eng yirik mijoz", "Potensial yangi mijoz",
+            "Hamkorlik bo‘yicha muzokara", "Doimiy buyurtmachi", ""
+        ]),
         assigned_to=user,
         created_by=user
     )
@@ -132,4 +99,5 @@ for i in range(30):
     )
     tasks.append(task)
 
-print("Bazaga 30 ta contact, lead, deal va task muvaffaqiyatli qo'shildi!")
+# 6. Natija
+print("✅ Bazaga 30 ta contact, lead, deal va task muvaffaqiyatli qo'shildi!")
