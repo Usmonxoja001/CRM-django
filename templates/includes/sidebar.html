@@ -1,42 +1,159 @@
-<aside class="w-64 bg-white shadow-md">
-    <div class="h-full px-3 py-4 overflow-y-auto">
-        <ul class="space-y-2">
-            <li>
-                <a href="{% url 'dashboard' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if request.path == '/dashboard/' or request.path == '/' %}bg-gray-100{% endif %}">
-                    <i class="fas fa-tachometer-alt w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Dashboard</span>
+<aside class="w-64 bg-white shadow-xl border-r border-gray-200 sidebar-transition" id="sidebar">
+    <div class="h-full flex flex-col">
+
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
+            <!-- Dashboard -->
+            <a href="{% url 'dashboard' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift {% if request.resolver_match.url_name == 'dashboard' %}bg-primary-100 text-primary-700 border-r-4 border-primary-500{% else %}text-gray-700{% endif %}">
+                <i class="fas fa-tachometer-alt mr-3 text-lg {% if request.resolver_match.url_name == 'dashboard' %}text-primary-600{% else %}text-gray-400 group-hover:text-primary-600{% endif %}"></i>
+                <span>Dashboard</span>
+                {% if request.resolver_match.url_name == 'dashboard' %}
+                    <div class="ml-auto w-2 h-2 bg-primary-500 rounded-full"></div>
+                {% endif %}
+            </a>
+
+            <!-- Leads -->
+            <a href="{% url 'lead_list' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift {% if 'leads' in request.resolver_match.app_name %}bg-primary-100 text-primary-700 border-r-4 border-primary-500{% else %}text-gray-700{% endif %}">
+                <i class="fas fa-user-plus mr-3 text-lg {% if 'leads' in request.resolver_match.app_name %}text-primary-600{% else %}text-gray-400 group-hover:text-primary-600{% endif %}"></i>
+                <span>Leads</span>
+                <span class="ml-auto bg-primary-100 text-primary-700 text-xs font-semibold px-2 py-1 rounded-full">12</span>
+            </a>
+
+            <!-- Contacts -->
+            <a href="{% url 'contact_list' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift {% if 'contacts' in request.resolver_match.app_name %}bg-primary-100 text-primary-700 border-r-4 border-primary-500{% else %}text-gray-700{% endif %}">
+                <i class="fas fa-address-book mr-3 text-lg {% if 'contacts' in request.resolver_match.app_name %}text-primary-600{% else %}text-gray-400 group-hover:text-primary-600{% endif %}"></i>
+                <span>Contacts</span>
+            </a>
+
+            <!-- Deals -->
+            <a href="{% url 'deal_list' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift {% if 'deals' in request.resolver_match.app_name %}bg-primary-100 text-primary-700 border-r-4 border-primary-500{% else %}text-gray-700{% endif %}">
+                <i class="fas fa-handshake mr-3 text-lg {% if 'deals' in request.resolver_match.app_name %}text-primary-600{% else %}text-gray-400 group-hover:text-primary-600{% endif %}"></i>
+                <span>Deals</span>
+                <span class="ml-auto bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full">8</span>
+            </a>
+
+            <!-- Tasks -->
+            <a href="{% url 'task_list' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift {% if 'tasks' in request.resolver_match.app_name %}bg-primary-100 text-primary-700 border-r-4 border-primary-500{% else %}text-gray-700{% endif %}">
+                <i class="fas fa-tasks mr-3 text-lg {% if 'tasks' in request.resolver_match.app_name %}text-primary-600{% else %}text-gray-400 group-hover:text-primary-600{% endif %}"></i>
+                <span>Tasks</span>
+                <span class="ml-auto bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">5</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 my-4"></div>
+
+            <!-- Quick Actions -->
+            <div class="px-4 py-2">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Quick Actions</h3>
+            </div>
+
+            <a href="{% url 'lead_create' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift">
+                <i class="fas fa-plus-circle mr-3 text-lg text-gray-400 group-hover:text-primary-600"></i>
+                <span>Add Lead</span>
+            </a>
+
+            <a href="{% url 'contact_create' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift">
+                <i class="fas fa-user-plus mr-3 text-lg text-gray-400 group-hover:text-primary-600"></i>
+                <span>Add Contact</span>
+            </a>
+
+            <a href="{% url 'deal_create' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift">
+                <i class="fas fa-briefcase mr-3 text-lg text-gray-400 group-hover:text-primary-600"></i>
+                <span>Create Deal</span>
+            </a>
+
+            <a href="{% url 'task_create' %}"
+               class="group flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-700 transition-all hover-lift">
+                <i class="fas fa-calendar-plus mr-3 text-lg text-gray-400 group-hover:text-primary-600"></i>
+                <span>Add Task</span>
+            </a>
+        </nav>
+
+        <!-- User Profile Section -->
+        <div class="border-t border-gray-200 p-4">
+
+            <!-- Profile Actions -->
+            <div class="space-y-1">
+                <!-- Profile Link - Only show if URL exists -->
+                {% url 'profile' as profile_url %}
+                {% if profile_url %}
+                <a href="{{ profile_url }}"
+                   class="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all">
+                    <i class="fas fa-user-circle mr-2 text-gray-400 group-hover:text-gray-600"></i>
+                    <span>View Profile</span>
                 </a>
-            </li>
-            <li>
-                <a href="{% url 'contact_list' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if '/contacts/' in request.path %}bg-gray-100{% endif %}">
-                    <i class="fas fa-address-book w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Contacts</span>
+                {% endif %}
+
+                <!-- Settings Link - Only show if URL exists -->
+                {% url 'settings' as settings_url %}
+                {% if settings_url %}
+                <a href="{{ settings_url }}"
+                   class="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all">
+                    <i class="fas fa-cog mr-2 text-gray-400 group-hover:text-gray-600"></i>
+                    <span>Settings</span>
                 </a>
-            </li>
-            <li>
-                <a href="{% url 'lead_list' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if '/leads/' in request.path %}bg-gray-100{% endif %}">
-                    <i class="fas fa-user-tag w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Leads</span>
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'deal_list' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if '/deals/' in request.path and '/kanban/' not in request.path %}bg-gray-100{% endif %}">
-                    <i class="fas fa-handshake w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Deals</span>
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'task_list' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if '/tasks/' in request.path %}bg-gray-100{% endif %}">
-                    <i class="fas fa-tasks w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Tasks</span>
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'profile' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 {% if '/accounts/profile/' in request.path %}bg-gray-100{% endif %}">
-                    <i class="fas fa-user-cog w-6 h-6 text-gray-500"></i>
-                    <span class="ml-3">Settings</span>
-                </a>
-            </li>
-        </ul>
+                {% endif %}
+
+
+                <div class="border-t border-gray-100 pt-2 mt-2">
+                    <a href="{% url 'logout' %}"
+                       class="group flex items-center px-3 py-2 text-xs font-medium text-red-600 rounded-lg hover:bg-red-50 hover:text-red-700 transition-all">
+                        <i class="fas fa-sign-out-alt mr-2 text-red-500 group-hover:text-red-600"></i>
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </aside>
+
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileButton = document.getElementById('mobile-sidebar-button');
+        const closeButton = document.getElementById('close-sidebar');
+
+        function openSidebar() {
+            sidebar.classList.add('show');
+            overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('show');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        if (mobileButton) {
+            mobileButton.addEventListener('click', openSidebar);
+        }
+
+        if (closeButton) {
+            closeButton.addEventListener('click', closeSidebar);
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+
+        // Close sidebar on window resize if mobile
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) {
+                closeSidebar();
+            }
+        });
+    });
+</script>

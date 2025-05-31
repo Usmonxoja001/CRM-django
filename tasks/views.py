@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Task
 from .forms import TaskForm
+from django.db.models import Q
 
 
 @login_required
@@ -11,36 +12,71 @@ def task_list(request):
     # Get filter parameters
     status_filter = request.GET.get('status', '')
     priority_filter = request.GET.get('priority', '')
+    search_query = request.GET.get('search', '')
 
     # Base queryset
     tasks = Task.objects.all()
 
-    # Apply filters
+    # Apply search filter
+    if search_query:
+        tasks = tasks.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    # Apply status filter
     if status_filter:
         tasks = tasks.filter(status=status_filter)
 
+    # Apply priority filter
     if priority_filter:
         tasks = tasks.filter(priority=priority_filter)
 
-    # Get overdue tasks
+    # Calculate KPI statistics
+    all_tasks = Task.objects.all()
+    total_tasks = all_tasks.count()
+
+    # Count tasks by status
+    pending_tasks = all_tasks.filter(status__in=['not_started', 'in_progress']).count()
+    completed_tasks = all_tasks.filter(status='completed').count()
+
+    # Calculate overdue tasks
+    from django.utils import timezone
     today = timezone.now()
-    overdue_tasks = tasks.filter(status__in=['not_started', 'in_progress'], due_date__lt=today)
+    overdue_tasks = all_tasks.filter(
+        status__in=['not_started', 'in_progress'],
+        due_date__lt=today
+    ).count()
+
+    # Get overdue tasks for display
+    overdue_tasks_list = all_tasks.filter(
+        status__in=['not_started', 'in_progress'],
+        due_date__lt=today
+    )
 
     # Get upcoming tasks (due in the next 7 days)
     next_week = today + timezone.timedelta(days=7)
-    upcoming_tasks = tasks.filter(status__in=['not_started', 'in_progress'], due_date__gte=today,
-                                  due_date__lte=next_week)
+    upcoming_tasks = all_tasks.filter(
+        status__in=['not_started', 'in_progress'],
+        due_date__gte=today,
+        due_date__lte=next_week
+    )
 
-    # Get completed tasks
-    completed_tasks = tasks.filter(status='completed')
+    # Get completed tasks for display
+    completed_tasks_list = all_tasks.filter(status='completed')
 
     context = {
         'tasks': tasks,
-        'overdue_tasks': overdue_tasks,
-        'upcoming_tasks': upcoming_tasks,
+        'total_tasks': total_tasks,
+        'pending_tasks': pending_tasks,
         'completed_tasks': completed_tasks,
+        'overdue_tasks': overdue_tasks,
+        'overdue_tasks_list': overdue_tasks_list,
+        'upcoming_tasks': upcoming_tasks,
+        'completed_tasks_list': completed_tasks_list,
         'status_filter': status_filter,
         'priority_filter': priority_filter,
+        'search_query': search_query,
     }
 
     return render(request, 'tasks/task_list.html', context)

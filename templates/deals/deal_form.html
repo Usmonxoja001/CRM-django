@@ -1,58 +1,271 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
-{% block title %}{{ action }} Deal - CRM System{% endblock %}
+{% block title %}{% if form.instance.pk %}Edit Deal{% else %}Create New Deal{% endif %} - CRM System{% endblock %}
 
 {% block content %}
-<div class="container mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">{{ action }} Deal</h1>
-        <a href="{% if deal %}{% url 'deal_detail' deal.id %}{% else %}{% url 'deal_list' %}{% endif %}" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md">
-            <i class="fas fa-arrow-left mr-2"></i> Back
-        </a>
-    </div>
-    
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="p-6">
-            <form method="post">
-                {% csrf_token %}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        {{ form.title|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.contact|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.lead|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.stage|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.amount|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.expected_close_date|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.probability|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ form.assigned_to|as_crispy_field }}
-                    </div>
-                    <div class="md:col-span-2">
-                        {{ form.description|as_crispy_field }}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-8">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-{% if form.instance.pk %}edit{% else %}handshake{% endif %} text-white text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold text-white">
+                            {% if form.instance.pk %}Edit Deal{% else %}Create New Deal{% endif %}
+                        </h1>
                     </div>
                 </div>
-                
-                <div class="mt-6 flex justify-end">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
-                        Save Deal
-                    </button>
+
+                <div class="p-6">
+                    <form method="post" class="space-y-6" id="deal-form">
+                        {% csrf_token %}
+
+                        <!-- Deal Information Section -->
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 border-b border-blue-200 pb-2 mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-handshake text-white text-sm"></i>
+                                    </div>
+                                    Deal Information
+                                </div>
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-tag text-blue-500 mr-2"></i>
+                                        Deal Title <span class="text-red-500">*</span>
+                                    </label>
+                                    {{ form.title }}
+                                    {% if form.title.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.title.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.contact.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user text-blue-500 mr-2"></i>
+                                        Contact <span class="text-red-500">*</span>
+                                    </label>
+                                    {{ form.contact }}
+                                    {% if form.contact.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.contact.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.lead.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user-tag text-blue-500 mr-2"></i>
+                                        Related Lead
+                                    </label>
+                                    {{ form.lead }}
+                                    {% if form.lead.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.lead.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.stage.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                                        Deal Stage <span class="text-red-500">*</span>
+                                    </label>
+                                    {{ form.stage }}
+                                    {% if form.stage.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.stage.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial Information Section -->
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 border-b border-green-200 pb-2 mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-dollar-sign text-white text-sm"></i>
+                                    </div>
+                                    Financial Details
+                                </div>
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-money-bill-wave text-green-500 mr-2"></i>
+                                        Deal Amount <span class="text-red-500">*</span>
+                                    </label>
+                                    {{ form.amount }}
+                                    {% if form.amount.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.amount.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.expected_close_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-calendar-alt text-green-500 mr-2"></i>
+                                        Expected Close Date
+                                    </label>
+                                    {{ form.expected_close_date }}
+                                    {% if form.expected_close_date.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.expected_close_date.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.probability.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-percentage text-green-500 mr-2"></i>
+                                        Probability (%)
+                                    </label>
+                                    {{ form.probability }}
+                                    {% if form.probability.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.probability.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information Section -->
+                        <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 border-b border-purple-200 pb-2 mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-info-circle text-white text-sm"></i>
+                                    </div>
+                                    Additional Information
+                                </div>
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="{{ form.assigned_to.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user-check text-purple-500 mr-2"></i>
+                                        Assigned To
+                                    </label>
+                                    {{ form.assigned_to }}
+                                    {% if form.assigned_to.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.assigned_to.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-sticky-note text-purple-500 mr-2"></i>
+                                        Description
+                                    </label>
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <p class="text-red-500 text-xs mt-1">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.description.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex space-x-3 pt-6 border-t border-gray-200">
+                            <button type="submit" id="submit-btn"
+                                    class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-6 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center">
+                                <span id="btn-text">
+                                    <i class="fas fa-save mr-2"></i>
+                                    {% if form.instance.pk %}Update Deal{% else %}Create Deal{% endif %}
+                                </span>
+                                <span id="btn-loading" class="hidden">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                                    Saving...
+                                </span>
+                            </button>
+                            <a href="{% if form.instance.pk %}{% url 'deal_detail' form.instance.pk %}{% else %}{% url 'deal_list' %}{% endif %}"
+                               class="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 text-center">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.form-control, .form-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200;
+}
+
+textarea.form-control {
+    @apply min-h-[100px] resize-vertical;
+}
+
+.form-control:focus, .form-select:focus {
+    @apply border-green-500 ring-2 ring-green-500;
+}
+
+input[type="date"] {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200;
+}
+
+input[type="number"] {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200;
+}
+
+select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('deal-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+
+    form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        btnText.classList.add('hidden');
+        btnLoading.classList.remove('hidden');
+    });
+
+    // Form validation feedback
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() !== '') {
+                this.classList.add('border-green-500');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.classList.remove('border-green-500');
+                this.classList.add('border-gray-300');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

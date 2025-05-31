@@ -3,36 +3,56 @@
 {% block title %}Delete Task - CRM System{% endblock %}
 
 {% block content %}
-<div class="container mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Delete Task</h1>
-        <a href="{% url 'task_detail' task.id %}" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md">
-            <i class="fas fa-arrow-left mr-2"></i> Back to Task
-        </a>
-    </div>
-    
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="p-6">
-            <div class="text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                    <i class="fas fa-exclamation-triangle text-red-600"></i>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Task</h3>
-                <p class="text-gray-500 mb-6">
-                    Are you sure you want to delete the task "{{ task.title }}"? This action cannot be undone.
-                </p>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="flex justify-center space-x-4">
-                        <a href="{% url 'task_detail' task.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md">
-                            Cancel
-                        </a>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md">
-                            Delete
-                        </button>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-8">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-red-500 to-red-600 px-6 py-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-white text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold text-white">Confirm Delete</h1>
                     </div>
-                </form>
+                </div>
+
+                <div class="p-6">
+                    <div class="text-center mb-6">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                            <i class="fas fa-trash-alt text-red-600 text-2xl"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-2">Delete Task</h2>
+                        <p class="text-gray-600">Are you sure you want to delete this task?</p>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-task text-green-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">{{ task.title }}</p>
+                                <p class="text-sm text-gray-500">{{ task.description|truncatewords:10 }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="flex space-x-3">
+                            <button type="submit"
+                                    class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 px-4 rounded-lg font-medium hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200">
+                                <i class="fas fa-trash-alt mr-2"></i>
+                                Yes, Delete
+                            </button>
+                            <a href="{% url 'task_detail' task.pk %}"
+                               class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 text-center">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -1,149 +1,358 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-{% block title %}{% if contact %}{{ contact.first_name }} {{ contact.last_name }}{% else %}Create Contact{% endif %} - CRM System{% endblock %}
+{% block title %}{{ action }} Contact - CRM System{% endblock %}
 
 {% block content %}
-<div class="container mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">{% if contact %}Contact Details{% else %}Create New Contact{% endif %}</h1>
-        {% if contact %}
-        <div class="flex space-x-2">
-            <a href="{% url 'contact_update' contact.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md">
-                <i class="fas fa-edit mr-2"></i> Edit
-            </a>
-            <a href="{% url 'contact_delete' contact.id %}" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md">
-                <i class="fas fa-trash mr-2"></i> Delete
-            </a>
-        </div>
-        {% endif %}
-    </div>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-8">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header Card -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-{% if contact %}edit{% else %}user-plus{% endif %} text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-white">{{ action }} Contact</h1>
+                            <p class="text-green-100 mt-1">Fill in the contact information below</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Contact Info Card -->
-        <div class="md:col-span-2">
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <form method="post" enctype="multipart/form-data">
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <form method="post" class="p-8">
                     {% csrf_token %}
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="mb-4">
-                            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">First Name</label>
-                            {{ form.first_name }}
-                            {% if form.first_name.errors %}
-                                <p class="text-red-500 text-xs mt-1">{{ form.first_name.errors.0 }}</p>
-                            {% endif %}
+                    <!-- Personal Information Section -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900">Personal Information</h3>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            {{ form.last_name }}
-                            {% if form.last_name.errors %}
-                                <p class="text-red-500 text-xs mt-1">{{ form.last_name.errors.0 }}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label for="{{ form.first_name.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-user-tag text-gray-400 mr-2"></i>
+                                    First Name <span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <div class="relative">
+                                    {{ form.first_name }}
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fas fa-check text-green-400 hidden" id="first-name-check"></i>
+                                    </div>
+                                </div>
+                                {% if form.first_name.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.first_name.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="{{ form.last_name.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-user-tag text-gray-400 mr-2"></i>
+                                    Last Name <span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <div class="relative">
+                                    {{ form.last_name }}
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fas fa-check text-green-400 hidden" id="last-name-check"></i>
+                                    </div>
+                                </div>
+                                {% if form.last_name.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.last_name.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information Section -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-address-book text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900">Contact Information</h3>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <label for="{{ form.email.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-envelope text-gray-400 mr-2"></i>
+                                    Email Address <span class="text-red-500 ml-1">*</span>
+                                </label>
+                                <div class="relative">
+                                    {{ form.email }}
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fas fa-at text-gray-300"></i>
+                                    </div>
+                                </div>
+                                {% if form.email.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.email.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label for="{{ form.phone.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                        <i class="fas fa-phone text-gray-400 mr-2"></i>
+                                        Phone Number
+                                    </label>
+                                    <div class="relative">
+                                        {{ form.phone }}
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                            <i class="fas fa-mobile-alt text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    {% if form.phone.errors %}
+                                        <p class="text-red-500 text-sm flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.phone.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label for="{{ form.source.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                        <i class="fas fa-source text-gray-400 mr-2"></i>
+                                        Lead Source
+                                    </label>
+                                    {{ form.source }}
+                                    {% if form.source.errors %}
+                                        <p class="text-red-500 text-sm flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ form.source.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="{{ form.address.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                                    Address
+                                </label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.address.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information Section -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-briefcase text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900">Professional Information</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="space-y-2">
+                                <label for="{{ form.company.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-building text-gray-400 mr-2"></i>
+                                    Company
+                                </label>
+                                <div class="relative">
+                                    {{ form.company }}
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fas fa-industry text-gray-300"></i>
+                                    </div>
+                                </div>
+                                {% if form.company.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.company.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="{{ form.position.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-id-badge text-gray-400 mr-2"></i>
+                                    Position
+                                </label>
+                                <div class="relative">
+                                    {{ form.position }}
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <i class="fas fa-user-tie text-gray-300"></i>
+                                    </div>
+                                </div>
+                                {% if form.position.errors %}
+                                    <p class="text-red-500 text-sm flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ form.position.errors.0 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="{{ form.assigned_to.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                <i class="fas fa-user-check text-gray-400 mr-2"></i>
+                                Assigned To
+                            </label>
+                            {{ form.assigned_to }}
+                            {% if form.assigned_to.errors %}
+                                <p class="text-red-500 text-sm flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.assigned_to.errors.0 }}
+                                </p>
                             {% endif %}
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
-                        {% endif %}
+                    <!-- Additional Information Section -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-sticky-note text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900">Additional Information</h3>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="{{ form.notes.id_for_label }}" class="flex items-center text-sm font-medium text-gray-700">
+                                <i class="fas fa-comment-alt text-gray-400 mr-2"></i>
+                                Notes
+                            </label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <p class="text-red-500 text-sm flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ form.notes.errors.0 }}
+                                </p>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">Phone</label>
-                        {{ form.phone }}
-                        {% if form.phone.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.phone.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.company.id_for_label }}" class="block text-sm font-medium text-gray-700">Company</label>
-                        {{ form.company }}
-                        {% if form.company.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.company.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.position.id_for_label }}" class="block text-sm font-medium text-gray-700">Position</label>
-                        {{ form.position }}
-                        {% if form.position.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.position.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Address</label>
-                        {{ form.address }}
-                        {% if form.address.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.address.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700">Notes</label>
-                        {{ form.notes }}
-                        {% if form.notes.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.notes.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700">Status</label>
-                        {{ form.status }}
-                        {% if form.status.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.status.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.source.id_for_label }}" class="block text-sm font-medium text-gray-700">Source</label>
-                        {{ form.source }}
-                        {% if form.source.errors %}
-                            <p class="text-red-500 text-xs mt-1">{{ form.source.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="mt-6">
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
-                            {% if contact %}Update{% else %}Create{% endif %} Contact
-                        </button>
-                        <a href="{% url 'contact_list' %}" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md">
+                    <!-- Form Actions -->
+                    <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-8 border-t border-gray-200">
+                        <a href="{% if contact %}{% url 'contact_detail' contact.id %}{% else %}{% url 'contact_list' %}{% endif %}"
+                           class="flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 font-medium">
+                            <i class="fas fa-times mr-2"></i>
                             Cancel
                         </a>
+                        <button type="submit"
+                                class="flex items-center justify-center px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <i class="fas fa-save mr-2"></i>
+                            {% if contact %}Update Contact{% else %}Create Contact{% endif %}
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-
-        <!-- Additional Info Card -->
-        <div class="md:col-span-1">
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4">Additional Information</h2>
-
-                {% if contact %}
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600">Created by</p>
-                    <p class="font-medium">{{ contact.created_by.username }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600">Created on</p>
-                    <p class="font-medium">{{ contact.created_at|date:"M d, Y" }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600">Last updated</p>
-                    <p class="font-medium">{{ contact.updated_at|date:"M d, Y" }}</p>
-                </div>
-                {% else %}
-                <p class="text-gray-600">Additional information will be available after creating the contact.</p>
-                {% endif %}
-            </div>
-        </div>
     </div>
 </div>
+
+<style>
+    /* Enhanced form styling */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+        @apply w-full px-4 py-3 pl-4 pr-10 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus,
+    select:focus {
+        @apply border-green-500 ring-2 ring-green-500 ring-opacity-20;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    textarea {
+        @apply resize-none;
+        height: 120px;
+    }
+
+    select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+
+    /* Section animations */
+    .section-card {
+        @apply transform transition-all duration-300 hover:scale-[1.01];
+    }
+
+    /* Button hover effects */
+    button[type="submit"]:hover {
+        @apply shadow-2xl;
+    }
+
+    /* Input validation states */
+    .input-valid {
+        @apply border-green-400 ring-2 ring-green-400 ring-opacity-20;
+    }
+
+    .input-error {
+        @apply border-red-400 ring-2 ring-red-400 ring-opacity-20;
+    }
+</style>
+
+<script>
+    // Form validation and UX enhancements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add real-time validation feedback
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.add('input-valid');
+                    this.classList.remove('input-error');
+
+                    // Show check icon for required fields
+                    const checkIcon = this.parentElement.querySelector('.fa-check');
+                    if (checkIcon) {
+                        checkIcon.classList.remove('hidden');
+                    }
+                } else if (this.hasAttribute('required')) {
+                    this.classList.add('input-error');
+                    this.classList.remove('input-valid');
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                this.classList.remove('input-error', 'input-valid');
+            });
+        });
+
+        // Form submission loading state
+        const form = document.querySelector('form');
+        const submitBtn = document.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+            submitBtn.disabled = true;
+        });
+    });
+</script>
 {% endblock %}

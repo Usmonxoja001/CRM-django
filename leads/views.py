@@ -9,7 +9,26 @@ from contacts.models import Contact
 @login_required
 def lead_list(request):
     leads = Lead.objects.all()
-    return render(request, 'leads/lead_list.html', {'leads': leads})
+
+    # Calculate KPI statistics
+    total_leads = Lead.objects.count()
+    new_leads_count = Lead.objects.filter(status='new').count()
+    contacted_leads_count = Lead.objects.filter(status='contacted').count()
+    qualified_leads_count = Lead.objects.filter(status='qualified').count()
+    converted_leads_count = Lead.objects.filter(status='converted').count()
+    lost_leads_count = Lead.objects.filter(status='lost').count()
+
+    context = {
+        'leads': leads,
+        'total_leads': total_leads,
+        'new_leads_count': new_leads_count,
+        'contacted_leads_count': contacted_leads_count,
+        'qualified_leads_count': qualified_leads_count,
+        'converted_leads_count': converted_leads_count,
+        'lost_leads_count': lost_leads_count,
+    }
+
+    return render(request, 'leads/lead_list.html', context)
 
 
 @login_required
