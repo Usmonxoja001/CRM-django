@@ -1,14 +1,6 @@
 <h1>🧠 CRM Django Project</h1>
 <p>A fully-featured <strong>Customer Relationship Management (CRM)</strong> system built with <strong>Django</strong>, <strong>PostgreSQL</strong>, and <strong>Docker</strong>. This application helps businesses manage their <strong>contacts, leads, deals, tasks</strong>, and <strong>user accounts</strong> through an intuitive and responsive dashboard.</p>
 
-  <hr>
-
-  <h2>🚀 Live Demo</h2>
-  <p>Deployed on <strong>AWS EC2</strong> using <strong>Docker</strong> and <strong>GitHub Actions CI/CD</strong> pipeline.</p>
-  <p><a href="http://43.204.150.89:8000/" target="_blank">🔗 http://43.204.150.89:8000/</a></p>
-
-  <hr>
-
   <h2>📦 Tech Stack</h2>
   <ul>
     <li><strong>Backend:</strong> Django 4.x</li>
@@ -91,9 +83,6 @@ python manage.py createsuperuser</code></pre>
   <h3>1. Build and Run the Containers</h3>
   <pre><code>docker-compose up --build</code></pre>
 
-  <h3>2. Open in Browser</h3>
-  <p><a href="http://43.204.150.89:8000/" target="_blank">🔗 CRM Django project/</a></p>
-
   <hr>
 
   <h2>✅ Features</h2>
@@ -126,10 +115,3 @@ python manage.py createsuperuser</code></pre>
 This project is licensed under the **MIT License**.  
 See the [LICENSE](./LICENSE) file for details.
 
-  <hr>
-
-  <h2>📧 Contact</h2>
-  <p><strong>Muhammadjon Merzaqulov</strong></p>
-  <p>Email: <a href="mailto:merzaqulov1@gmail.com">merzaqulov1@gmail.com</a></p>
-  <p>LinkedIn: <a href="https://www.linkedin.com/in/muhammadjon-merzaqulov/" target="_blank">muhammadjon-merzaqulov</a></p>
-  <p>GitHub: <a href="https://github.com/muhammadjon-merzaqulov" target="_blank">github.com/muhammadjon-merzaqulov</a></p>
