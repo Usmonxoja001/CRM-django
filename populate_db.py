@@ -9,7 +9,9 @@ django.setup()
 
 # 2. Model va foydalanuvchilarni import qilish
 from contacts.models import Contact
-from leads.models import Lead, Deal, Task
+from leads.models import Lead
+from deals.models import Deal
+from tasks.models import Tasks
 from django.contrib.auth.models import User
 
 # 3. Superuserni olish
