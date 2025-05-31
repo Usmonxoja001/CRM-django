@@ -11,7 +11,7 @@ django.setup()
 from contacts.models import Contact
 from leads.models import Lead
 from deals.models import Deal
-from tasks.models import Tasks
+from tasks.models import Task
 from django.contrib.auth.models import User
 
 # 3. Superuserni olish
