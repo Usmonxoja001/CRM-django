@@ -28,11 +28,6 @@ addresses = ["Toshkent", "Samarqand", "Buxoro", "Farg‘ona", "Namangan"]
 lead_titles = [f"Lead #{i+1}" for i in range(30)]
 lead_desc = ["Yirik loyiha", "Aloqa o‘rnatildi", "Kutilmoqda", "Tavsiya asosida", "Sinov bosqichi"]
 
-Contact.objects.all().delete()
-Lead.objects.all().delete()
-Deal.objects.all().delete()
-Task.objects.all().delete()
-
 def clean_phone(phone):
     return phone.replace(" ", "").replace("-", "")
 
@@ -48,21 +43,23 @@ for i in range(30):
     email = f"{first.lower()}.{last.lower()}@{company.lower().replace(' ', '')}.uz"
     phone = clean_phone(f"+998{random.randint(900000000, 999999999)}")
 
-    contact = Contact.objects.create(
-        first_name=first,
-        last_name=last,
+    contact, created = Contact.objects.get_or_create(
         email=email,
-        phone=phone,
-        company=company,
-        position=position,
-        address=address,
-        source=random.choice(['website', 'referral', 'social_media', 'email', 'other']),
-        notes=random.choice([
-            "Eng yirik mijoz", "Potensial yangi mijoz",
-            "Hamkorlik bo‘yicha muzokara", "Doimiy buyurtmachi", ""
-        ]),
-        assigned_to=user,
-        created_by=user
+        defaults={
+            'first_name': first,
+            'last_name': last,
+            'phone': phone,
+            'company': company,
+            'position': position,
+            'address': address,
+            'source': random.choice(['website', 'referral', 'social_media', 'email', 'other']),
+            'notes': random.choice([
+                "Eng yirik mijoz", "Potensial yangi mijoz",
+                "Hamkorlik bo‘yicha muzokara", "Doimiy buyurtmachi", ""
+            ]),
+            'assigned_to': user,
+            'created_by': user
+        }
     )
     contacts.append(contact)
 
