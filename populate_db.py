@@ -28,6 +28,11 @@ addresses = ["Toshkent", "Samarqand", "Buxoro", "Farg‘ona", "Namangan"]
 lead_titles = [f"Lead #{i+1}" for i in range(30)]
 lead_desc = ["Yirik loyiha", "Aloqa o‘rnatildi", "Kutilmoqda", "Tavsiya asosida", "Sinov bosqichi"]
 
+Contact.objects.all().delete()
+Lead.objects.all().delete()
+Deal.objects.all().delete()
+Task.objects.all().delete()
+
 def clean_phone(phone):
     return phone.replace(" ", "").replace("-", "")
 
