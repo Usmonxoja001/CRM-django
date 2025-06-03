@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
-            cd /home/ubuntu/CRM-Django-project
+            cd /home/ubuntu/CRM-django
             git pull origin main
             docker-compose down
             docker-compose up -d --build
